@@ -72,8 +72,10 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 .btn-sm.danger:hover{background:#FCEBEB}
 
 /* ── Overlay 共用 ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:32px 16px;overflow-y:auto}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:32px 16px;overflow:hidden}
 .overlay.open{display:flex}
+/* modal 自身可捲動 */
+.modal,.picker,.detail-modal,.rule-popup,.sap-modal{max-height:calc(100vh - 64px);overflow-y:auto}
 
 /* ── 選擇付款方式 picker ── */
 .picker{background:var(--color-background-primary);border-radius:var(--border-radius-lg);width:420px;max-width:96vw;border:0.5px solid var(--color-border-tertiary);box-shadow:0 8px 32px rgba(0,0,0,0.2)}
@@ -81,7 +83,7 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 .picker-head h2{font-size:15px;font-weight:500;margin:0}
 .modal-close{background:none;border:none;cursor:pointer;color:var(--color-text-secondary);font-size:20px;line-height:1;padding:4px}
 .modal-close:hover{color:var(--color-text-primary)}
-.picker-body{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.picker-body{padding:12px 20px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
 .method-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer;background:var(--color-background-primary);transition:border-color .15s,background .15s}
 .method-card:hover{border-color:var(--color-border-primary);background:var(--color-background-secondary)}
 .method-card:active{transform:scale(0.98)}
@@ -221,11 +223,18 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 .cash-remark-content{font-size:12px;color:var(--color-text-secondary);padding:6px 0 2px;display:none}
 .cash-remark-content.open{display:block}
 
-.order-info-bar{display:flex;align-items:center;gap:0;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);padding:9px 24px;flex-wrap:wrap;gap:6px 20px}
-.order-info-item{display:flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap}
-.order-info-item .oi-label{color:var(--color-text-secondary)}
-.order-info-item .oi-value{color:var(--color-text-primary);font-weight:500}
-.order-info-sep{width:0.5px;height:14px;background:var(--color-border-secondary);flex-shrink:0}
+.order-info-bar{background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);padding:8px 24px;display:flex;flex-direction:column;gap:0}
+.order-info-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.order-info-row+.order-info-row{border-top:0.5px solid var(--color-border-tertiary);margin-top:0}
+.order-info-item{display:flex;flex-direction:column;gap:2px;padding:5px 0;min-width:0}
+.order-info-item+.order-info-item{border-left:0.5px solid var(--color-border-tertiary);padding-left:16px}
+.order-info-item .oi-label{font-size:11px;color:var(--color-text-secondary)}
+.order-info-item .oi-value{font-size:13px;color:var(--color-text-primary);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order-info-item .oi-value.oi-amount{color:#185FA5}
+.order-info-item .oi-value.oi-remain{color:#185FA5}
+.order-info-item .oi-value.oi-remain.zero{color:var(--color-text-secondary)}
+.order-info-item .oi-value.oi-remain.over{color:#A32D2D}
+.order-info-sep{display:none}
 
 /* ── 買受人 tag + 切換按鈕 ── */
 .btn-replace{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;font-size:12px;font-weight:500;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;height:34px}
@@ -322,7 +331,7 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 /* ── 規則說明 popup ── */
 .rule-popup-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:32px 16px}
 .rule-popup-overlay.open{display:flex}
-.rule-popup{background:var(--color-background-primary);border-radius:var(--border-radius-lg);width:560px;max-width:96vw;border:0.5px solid var(--color-border-tertiary);box-shadow:0 8px 32px rgba(0,0,0,0.2);max-height:82vh;display:flex;flex-direction:column}
+.rule-popup{background:var(--color-background-primary);border-radius:var(--border-radius-lg);width:560px;max-width:96vw;border:0.5px solid var(--color-border-tertiary);box-shadow:0 8px 32px rgba(0,0,0,0.2);height:72vh;max-height:72vh;display:flex;flex-direction:column}
 .rule-popup-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:0.5px solid var(--color-border-tertiary);flex-shrink:0}
 .rule-popup-head h3{font-size:14px;font-weight:600;margin:0}
 .rule-popup-tabs{display:flex;padding:12px 20px 0;gap:0;flex-shrink:0;border-bottom:0.5px solid var(--color-border-tertiary)}
@@ -350,11 +359,67 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 .method-card.disabled .method-icon{opacity:0.4}
 .method-card.disabled .method-name{color:var(--color-text-secondary)}
 .method-card.disabled .method-desc{opacity:0.6}
-.method-card .method-lock{font-size:11px;color:#A32D2D;text-align:center;margin-top:3px;min-height:16px;font-weight:500}
+.method-card .method-lock{display:none}
+
+/* ── Picker method-card-wrap (card + rule toggle + rule panel) ── */
+.method-card-wrap{display:flex;flex-direction:column;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);overflow:hidden;background:var(--color-background-primary);transition:border-color .15s}
+.method-card-wrap:hover{border-color:var(--color-border-secondary)}
+.method-card-wrap .method-card{border:none;border-radius:0;flex:1}
+.method-card-wrap .method-card:hover{border-color:transparent}
+.method-rule-btn{width:100%;padding:5px 10px;font-size:11px;border:none;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);color:#185FA5;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:background .15s,color .15s;font-weight:500}
+.method-rule-btn:hover{background:var(--color-background-tertiary);color:#0C447C;text-decoration:underline}
 
 /* ── 標題列第二行（狀態列） ── */
 .list-card-header{flex-wrap:wrap;gap:8px}
 .header-status-label{font-size:11px;color:var(--color-text-secondary);flex-shrink:0}
+
+/* ── 優化：pay-row 重構（grid 固定欄寬） ── */
+.pay-row{display:grid;grid-template-columns:72px 60px 52px 120px 1fr 68px;align-items:center;gap:4px;padding:0 20px;border-bottom:0.5px solid var(--color-border-tertiary);transition:background .15s;min-height:48px}
+.pay-row:last-child{border-bottom:none}
+.pay-row:hover{background:var(--color-background-secondary)}
+.pay-row-col{display:flex;align-items:center;padding:10px 0}
+.pay-row-col:last-child{justify-content:flex-end}
+.pay-row-col-ops{padding:10px 0}
+.pay-row-amount{font-size:14px;font-weight:600;color:var(--color-text-primary);white-space:nowrap}
+.pay-row-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 0}
+/* keep legacy classes for compat */
+.pay-row-left{display:contents}
+.pay-row-right{display:contents}
+.pay-row-badges{display:contents}
+.pay-row-primary{display:contents}
+
+/* ── 優化：空白狀態 ── */
+.pay-empty{padding:48px 20px 52px;text-align:center}
+.pay-empty-icon{font-size:36px;margin-bottom:12px;opacity:0.4}
+.pay-empty-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.pay-empty-sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+
+/* ── 優化：form group 一致性 ── */
+.fg label{font-size:12px;color:var(--color-text-secondary);font-weight:500;letter-spacing:.01em}
+.fg select,.fg input,.fg textarea{padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;width:100%}
+.fg select:disabled{background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:default;border-color:var(--color-border-tertiary)}
+.fg select:focus,.fg input:focus,.fg textarea:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 2px rgba(24,95,165,0.08)}
+
+/* ── 優化：SAP modal 內聯 style 提取 ── */
+.sap-info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 16px;padding:12px 24px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.sap-info-field{display:flex;flex-direction:column;gap:2px}
+.sap-info-label{font-size:11px;color:var(--color-text-secondary)}
+.sap-info-value{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+
+/* ── 優化：cash-to-wire 現金資訊區 ── */
+.cash-wire-info{padding:14px 24px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.cash-wire-info-row{display:flex;gap:12px;align-items:flex-start}
+.ci-readonly-field{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.ci-readonly-val{padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.ci-readonly-val.bold{font-weight:500}
+
+/* ── 優化：totals 區進度條 ── */
+.pay-progress-bar{height:4px;border-radius:2px;background:var(--color-border-tertiary);margin:8px 0 4px;overflow:hidden}
+.pay-progress-fill{height:100%;border-radius:2px;background:#185FA5;transition:width .4s ease,background .3s}
+.pay-progress-fill.over{background:#A32D2D}
+
+/* ── 優化：modal-head 改善 ── */
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:0.5px solid var(--color-border-tertiary);position:sticky;top:0;background:var(--color-background-primary);z-index:10}
 </style>
 </head>
 <body>
@@ -366,7 +431,7 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
   </div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="openRulePopup()" style="display:inline-flex;align-items:center;gap:4px;padding:6px 14px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;">
-      <span style="font-size:13px">ℹ</span> 規則說明
+      <span style="font-size:13px">ℹ</span> 操作說明
     </button>
     <button onclick="loadTestData()" style="padding:6px 14px;font-size:12px;background:#F1EFE8;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer;color:var(--color-text-secondary)">🧪 載入測試資料</button>
     <button onclick="clearTestData()" style="padding:6px 14px;font-size:12px;background:#FCEBEB;border:0.5px solid rgba(163,45,45,0.3);border-radius:var(--border-radius-md);cursor:pointer;color:#A32D2D">🗑 清空</button>
@@ -389,7 +454,11 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
     </button>
   </div>
   <div id="payList">
-    <div class="pay-empty" id="payEmpty">尚無付款記錄</div>
+    <div class="pay-empty" id="payEmpty">
+    <div class="pay-empty-icon">💳</div>
+    <div class="pay-empty-title">尚無付款記錄</div>
+    <div class="pay-empty-sub">點擊右上角「新增付款方式」<br>開始新增本筆訂單的付款記錄</div>
+  </div>
   </div>
   <div class="pay-totals" id="payTotals" style="display:none">
     <div class="pay-totals-inner">
@@ -401,6 +470,7 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
         <span class="pt-label">付款合計</span>
         <span class="pt-value" id="ptTotal" style="font-weight:600"></span>
       </div>
+      <div class="pay-progress-bar"><div class="pay-progress-fill" id="ptProgressFill" style="width:0%"></div></div>
       <div class="pt-err" id="ptErr" style="display:none">⚠️ 付款合計超過發票金額，請確認</div>
     </div>
   </div>
@@ -413,10 +483,11 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
       <h2>選擇付款方式</h2>
       <button class="modal-close" onclick="closePicker()" aria-label="關閉"><span>✕</span></button>
     </div>
+    <div id="pickerHint" style="padding:8px 20px 0;font-size:11px;color:var(--color-text-secondary)">選擇本次付款方式，點選卡片後進入填寫流程</div>
     <div class="picker-body" id="pickerBody">
       <!-- rendered by renderPickerCards() -->
     </div>
-    <div class="picker-foot">
+    <div class="picker-foot" id="pickerFooter">
       <button class="btn-cancel" onclick="closePicker()">取消</button>
     </div>
   </div>
@@ -426,7 +497,12 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 <div class="rule-popup-overlay" id="rulePopupOverlay" onclick="onRulePopupOverlayClick(event)">
   <div class="rule-popup">
     <div class="rule-popup-head">
-      <h3>付款操作規則說明</h3>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+        <button id="ruleBackBtn" onclick="rulePopupGoBack()" style="display:none;align-items:center;gap:4px;padding:4px 10px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;flex-shrink:0">
+          ← 返回選擇
+        </button>
+        <h3 style="font-size:14px;font-weight:600;margin:0">付款資訊 - 操作說明</h3>
+      </div>
       <button class="modal-close" onclick="closeRulePopup()"><span>✕</span></button>
     </div>
     <!-- 頁籤 -->
@@ -446,11 +522,9 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
           <colgroup><col class="cond-col"/><col class="act-col"/><col class="act-col"/></colgroup>
           <thead><tr><th class="cond-col">條件</th><th class="act-col">新增</th><th class="act-col">刪除</th></tr></thead>
           <tbody>
-            <tr><td>訂單：暫存</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售補正</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售核准</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售申請 / 退購各狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
-            <tr><td>發票：申請中 / 已開立 / 已折讓 / 已作廢</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
+            <tr><td>訂單：暫存 / 出售補正 / 出售核准</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>發票：未開立</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>其餘狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
           </tbody>
         </table>
         <div class="rule-highlights">
@@ -464,36 +538,35 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
           <colgroup><col class="cond-col"/><col class="act-col"/><col class="act-col"/></colgroup>
           <thead><tr><th class="cond-col">條件</th><th class="act-col">新增</th><th class="act-col">刪除</th></tr></thead>
           <tbody>
-            <tr><td>訂單：暫存</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售補正</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售核准</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售申請 / 退購各狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
-            <tr><td>發票：申請中 / 已開立 / 已折讓 / 已作廢</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
+            <tr><td>訂單：暫存 / 出售補正 / 出售核准</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>發票：未開立</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>其餘狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
           </tbody>
         </table>
         <div class="rule-highlights">
-          <div class="rule-highlight-item"><span class="rule-highlight-icon">💡</span>同一筆匯款金額可分配給多筆訂單，分配後不可撤回。</div>
-          <div class="rule-highlight-item"><span class="rule-highlight-icon">⚠️</span>代付車款匯款須上傳代付同意書，方可儲存。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">💡</span>同一筆匯款金額，可分配給多筆訂單，總計不可超過該筆匯款總額。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">⚠️</span>由他人代為匯款支付，請務必上傳「代付車款同意書」。</div>
         </div>
       </div>
 
       <!-- 貸款 -->
       <div class="rule-panel" id="rpanel2">
         <table class="rule-table">
-          <colgroup><col class="cond-col"/><col class="act-col"/><col class="act-col"/><col class="act-col"/><col class="act-col"/></colgroup>
-          <thead><tr><th class="cond-col">條件</th><th class="act-col">新增</th><th class="act-col">刪除</th><th class="act-col">編輯</th><th class="act-col">上傳同意書</th></tr></thead>
+          <colgroup><col class="cond-col"/><col class="act-col"/><col class="act-col"/><col class="act-col"/></colgroup>
+          <thead><tr><th class="cond-col">條件</th><th class="act-col">新增</th><th class="act-col">刪除</th><th class="act-col">同意書</th></tr></thead>
           <tbody>
-            <tr><td>訂單：暫存</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售補正</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售核准</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售申請 / 退購各狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
-            <tr><td>發票：申請中 / 已開立 / 已折讓 / 已作廢</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>貸款入款已完成</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
+            <tr><td>訂單：暫存 / 出售補正 / 出售核准</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>發票：未開立</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>發票：申請中 / 已開立</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>貸款入款已完成</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
+            <tr><td>其餘狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
           </tbody>
         </table>
         <div class="rule-highlights">
-          <div class="rule-highlight-item"><span class="rule-highlight-icon">⚠️</span>有超貸金額時，需供應商銀行帳戶審核通過，才能進行貸款入款及開立發票。</div>
-          <div class="rule-highlight-item"><span class="rule-highlight-icon">💡</span>貸款入款完成後，此筆付款記錄將完全鎖定，無法異動。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">💡</span>無超貸情況，待訂單審核通過且開立發票後，即可操作貸款入款。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">💡</span>有超貸情況：需供應商銀行帳戶審核通過，才能進行貸款入款。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">⚠️</span>請務必上傳貸款同意書。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">⚠️</span>貸款入款後，貸款記錄將無法再異動。</div>
         </div>
       </div>
 
@@ -503,15 +576,14 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
           <colgroup><col class="cond-col"/><col class="act-col"/><col class="act-col"/></colgroup>
           <thead><tr><th class="cond-col">條件</th><th class="act-col">新增</th><th class="act-col">刪除</th></tr></thead>
           <tbody>
-            <tr><td>訂單：暫存</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售補正</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
-            <tr><td>訂單：出售申請 / 出售核准 / 退購各狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
-            <tr><td>發票：申請中 / 已開立 / 已折讓 / 已作廢</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
+            <tr><td>訂單：暫存 / 出售補正</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>發票：未開立</td><td class="act-cell rule-ok">✓</td><td class="act-cell rule-ok">✓</td></tr>
+            <tr><td>其餘狀態</td><td class="act-cell rule-no">✗</td><td class="act-cell rule-no">✗</td></tr>
           </tbody>
         </table>
         <div class="rule-highlights">
-          <div class="rule-highlight-item"><span class="rule-highlight-icon">💡</span>退購核准後，信用卡記錄仍會保留，但將標示為「已作廢」。</div>
-          <div class="rule-highlight-item"><span class="rule-highlight-icon">⚠️</span>刷卡單照片為必填，需上傳後才能儲存。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">⚠️</span>出售核准後，不可再登錄信用卡支付。</div>
+          <div class="rule-highlight-item"><span class="rule-highlight-icon">💡</span>登錄時，請備妥刷卡單。</div>
         </div>
       </div>
 
@@ -531,13 +603,16 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 
   <!-- 訂單資訊列 -->
   <div class="order-info-bar">
-    <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value">$300,000</span></div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
+      <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
+      <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
+    </div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value oi-amount" id="oiInvoiceAmt">NT$ 300,000 元</span></div>
+      <div class="order-info-item"><span class="oi-label">已登錄金額</span><span class="oi-value" id="oiRegistered">NT$ 0 元</span></div>
+      <div class="order-info-item"><span class="oi-label">待登錄餘額</span><span class="oi-value oi-remain" id="oiRemain">NT$ 300,000 元</span></div>
+    </div>
   </div>
 
   <div class="modal-body">
@@ -547,16 +622,14 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
         <select id="selCategory"><option value="訂金">訂金</option><option value="尾款">尾款</option></select>
       </div>
       <div class="fg" style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <label style="margin:0">付款人統編 / 證號 <span class="req">*</span></label>
-          <label class="check-row" style="font-weight:400">
+        <label style="display:block;margin-bottom:4px">付款人統編 / 證號 <span class="req">*</span></label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="searchId" type="text" disabled placeholder="統編或身分證字號（8碼或10碼）" style="flex:1;min-width:0"/>
+          <button class="btn-primary" onclick="doSearch()">查詢</button>
+          <label class="check-row" style="font-weight:400;flex-shrink:0;white-space:nowrap">
             <input type="checkbox" id="chkSameBuyer" onchange="onSameBuyerChange(this.checked)" checked/>
             買受人同付款人
           </label>
-        </div>
-        <div style="display:flex;gap:8px">
-          <input id="searchId" type="text" disabled placeholder="統編或身分證字號（8碼或10碼）" style="flex:1;min-width:0"/>
-          <button class="btn-primary" onclick="doSearch()">查詢</button>
         </div>
       </div>
     </div>
@@ -668,6 +741,18 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
     <h2>新增付款資訊 <span class="method-tag badge-card">信用卡</span></h2>
     <button class="modal-close" onclick="closeCardModal()" aria-label="關閉"><span>✕</span></button>
   </div>
+  <div class="order-info-bar">
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
+      <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
+      <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
+    </div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value oi-amount" id="oiInvoiceAmt">NT$ 300,000 元</span></div>
+      <div class="order-info-item"><span class="oi-label">已登錄金額</span><span class="oi-value" id="oiRegistered">NT$ 0 元</span></div>
+      <div class="order-info-item"><span class="oi-label">待登錄餘額</span><span class="oi-value oi-remain" id="oiRemain">NT$ 300,000 元</span></div>
+    </div>
+  </div>
   <div class="modal-body">
     <div class="form-grid col2">
       <div class="fg">
@@ -728,21 +813,24 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 
 <!-- Step 2：貸款 Modal -->
 <div class="overlay" id="loanOverlay" onclick="onLoanOverlayClick(event)">
-<div class="modal" style="max-height:92vh;overflow-y:auto;overflow-x:hidden">
-  <div class="modal-head" style="position:sticky;top:0;background:var(--color-background-primary);z-index:10">
+<div class="modal" style="overflow-x:hidden">
+  <div class="modal-head">
     <h2>新增付款資訊 <span class="method-tag badge-loan">貸款</span></h2>
     <button class="modal-close" onclick="closeLoanModal()" aria-label="關閉"><span>✕</span></button>
   </div>
 
   <!-- 訂單資訊列 -->
   <div class="order-info-bar">
-    <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value">$300,000</span></div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
+      <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
+      <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
+    </div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value oi-amount" id="oiInvoiceAmt">NT$ 300,000 元</span></div>
+      <div class="order-info-item"><span class="oi-label">已登錄金額</span><span class="oi-value" id="oiRegistered">NT$ 0 元</span></div>
+      <div class="order-info-item"><span class="oi-label">待登錄餘額</span><span class="oi-value oi-remain" id="oiRemain">NT$ 300,000 元</span></div>
+    </div>
   </div>
 
   <div class="modal-body">
@@ -768,6 +856,7 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
           <input type="number" id="loanCar" min="0" placeholder="0" oninput="calcLoanAmounts()"/>
           <span class="suffix-label">元</span>
         </div>
+        <div class="err-msg" id="loanAmtErr"></div>
       </div>
       <div class="fg">
         <label>超貸額度</label>
@@ -776,7 +865,6 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
           <span class="suffix-label">元</span>
         </div>
       </div>
-      <div class="err-msg span4" id="loanAmtErr" style="margin-top:-8px"></div>
 
       <!-- 第二排：放款機構 放款機構統編 放款機構說明(span 2) -->
       <div class="fg">
@@ -850,13 +938,16 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 
   <!-- 訂單資訊列 -->
   <div class="order-info-bar">
-    <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value">$300,000</span></div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
+      <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
+      <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
+    </div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value oi-amount" id="oiInvoiceAmt">NT$ 300,000 元</span></div>
+      <div class="order-info-item"><span class="oi-label">已登錄金額</span><span class="oi-value" id="oiRegistered">NT$ 0 元</span></div>
+      <div class="order-info-item"><span class="oi-label">待登錄餘額</span><span class="oi-value oi-remain" id="oiRemain">NT$ 300,000 元</span></div>
+    </div>
   </div>
 
   <div class="modal-body">
@@ -905,42 +996,45 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 <div class="overlay" id="cashToWireOverlay" onclick="onCashToWireOverlayClick(event)">
 <div class="modal">
   <div class="modal-head">
-    <h2>將現金轉為匯款 <span class="method-tag badge-wire">匯款</span></h2>
+    <h2>將現金轉為匯款 <span class="method-tag badge-cash">現金</span></h2>
     <button class="modal-close" onclick="closeCashToWireModal()" aria-label="關閉"><span>✕</span></button>
   </div>
 
   <!-- 訂單資訊列 -->
   <div class="order-info-bar">
-    <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
-    <div class="order-info-sep"></div>
-    <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value">$300,000</span></div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
+      <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
+      <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
+    </div>
+    <div class="order-info-row">
+      <div class="order-info-item"><span class="oi-label">發票金額</span><span class="oi-value oi-amount" id="oiInvoiceAmt">NT$ 300,000 元</span></div>
+      <div class="order-info-item"><span class="oi-label">已登錄金額</span><span class="oi-value" id="oiRegistered">NT$ 0 元</span></div>
+      <div class="order-info-item"><span class="oi-label">待登錄餘額</span><span class="oi-value oi-remain" id="oiRemain">NT$ 300,000 元</span></div>
+    </div>
   </div>
 
   <!-- 現金收款資訊（卡片欄位式，訂單列下方） -->
-  <div style="padding:14px 24px;border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)">
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <div class="fg" style="flex:1;min-width:0">
-        <label>現金收款日期</label>
-        <div style="padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-secondary);color:var(--color-text-primary)" id="ciDate">—</div>
+  <div class="cash-wire-info">
+    <div class="cash-wire-info-row">
+      <div class="ci-readonly-field">
+        <label class="fg" style="font-size:12px;color:var(--color-text-secondary);font-weight:500">現金收款日期</label>
+        <div class="ci-readonly-val" id="ciDate">—</div>
       </div>
-      <div class="fg" style="flex:1;min-width:0">
-        <label>現金金額</label>
-        <div style="padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500" id="ciAmount">—</div>
+      <div class="ci-readonly-field">
+        <label class="fg" style="font-size:12px;color:var(--color-text-secondary);font-weight:500">現金金額</label>
+        <div class="ci-readonly-val bold" id="ciAmount">—</div>
       </div>
-      <div class="fg" style="flex:0 0 auto;align-self:flex-end">
+      <div style="flex:0 0 auto;align-self:flex-end">
         <button class="btn-cancel" id="ciRemarkToggle" onclick="toggleCiRemark()" style="display:none;height:34px">
           <span style="font-size:13px;vertical-align:-1px">📝</span> 展開備註
         </button>
       </div>
     </div>
     <div id="ciRemarkContent" style="display:none;margin-top:10px">
-      <div class="fg">
-        <label>備註</label>
-        <div style="padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-secondary);color:var(--color-text-primary);min-height:36px" id="ciRemarkText"></div>
+      <div class="ci-readonly-field">
+        <label style="font-size:12px;color:var(--color-text-secondary);font-weight:500">備註</label>
+        <div class="ci-readonly-val" id="ciRemarkText"></div>
       </div>
     </div>
   </div>
@@ -954,7 +1048,7 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
       <div class="fg" style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
           <label style="margin:0">付款人統編 / 證號 <span class="req">*</span></label>
-          <label class="check-row" style="font-weight:400;opacity:0.6;cursor:not-allowed">
+          <label class="check-row" style="font-weight:400;opacity:0.6;cursor:not-allowed;white-space:nowrap">
             <input type="checkbox" id="c2wChkSameBuyer" checked disabled style="cursor:not-allowed"/>
             買受人同付款人
           </label>
@@ -968,7 +1062,7 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 
     <div id="c2wResultSection" style="display:none">
       <div style="margin-bottom:8px;font-size:11px;color:var(--color-text-secondary)">
-        僅顯示匯款總額與現金金額相符的筆數（<span id="c2wMatchAmount">—</span> 元）
+        僅顯示匯款總額 ≥ 現金金額的匯款記錄（現金金額：<span id="c2wMatchAmount">—</span> 元）
       </div>
       <table class="tbl">
         <colgroup>
@@ -986,6 +1080,48 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
       </div>
       <div class="err-msg" id="c2wAllocErr" style="margin-top:6px"></div>
     </div>
+
+    <!-- 分配摘要（選擇匯款後顯示） -->
+    <div id="c2wAllocSection" style="display:none" class="sel-section">
+      <div style="margin-bottom:10px">
+        <div class="sel-label" style="margin-bottom:2px">款項分配</div>
+        <div style="font-size:11px;color:var(--color-text-secondary)">現金轉匯款，分配金額固定為登錄之現金收款金額</div>
+      </div>
+      <table class="sel-tbl">
+        <colgroup>
+          <col class="sc-date"/><col class="sc-seq"/><col class="sc-total"/>
+          <col class="sc-allocated"/><col class="sc-avail"/>
+        </colgroup>
+        <thead><tr>
+          <th>入帳時間</th><th>匯款序號</th><th>匯款總額</th>
+          <th>已分配金額</th><th class="avail-th">可分配金額</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td id="c2wSelDate">—</td><td id="c2wSelSeq">—</td><td id="c2wSelTotal">—</td>
+            <td><div class="allocated-cell"><span id="c2wSelAllocated">—</span></div></td>
+            <td class="avail" id="c2wSelAvail">—</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alloc-row" style="margin-top:12px">
+        <div class="alloc-field">
+          <label>本次分配金額</label>
+          <div class="alloc-box disabled-box">
+            <input type="text" id="c2wAllocDisplay" disabled placeholder="—"/>
+            <span class="unit">元</span>
+          </div>
+        </div>
+        <div class="alloc-field">
+          <label>剩餘可分配金額</label>
+          <div class="alloc-box disabled-box" id="c2wRemainBox">
+            <input type="text" id="c2wRemainDisplay" disabled placeholder="—"/>
+            <span class="unit">元</span>
+          </div>
+        </div>
+      </div>
+      <div class="err-msg" id="c2wAllocSectionErr" style="margin-top:4px"></div>
+    </div>
   </div>
   <div class="modal-foot">
     <button class="btn-cancel" onclick="closeCashToWireModal()">取消</button>
@@ -997,30 +1133,16 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 <!-- 供應商銀行帳戶維護 Modal -->
 <div class="overlay" id="sapModalOverlay" onclick="onSapModalOverlayClick(event)">
   <div class="sap-modal">
-    <div class="modal-head" style="position:sticky;top:0;background:var(--color-background-primary);z-index:10">
+    <div class="modal-head">
       <h2 id="sapModalTitle">供應商銀行帳戶維護</h2>
       <button class="modal-close" onclick="closeSapModal()" aria-label="關閉"><span>✕</span></button>
     </div>
     <!-- 供應商資訊列 -->
-    <div style="padding:12px 24px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)">
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px 16px">
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <span style="font-size:11px;color:var(--color-text-secondary)">適用公司</span>
-          <span style="font-size:13px;font-weight:500">12208883</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <span style="font-size:11px;color:var(--color-text-secondary)">帳號類型</span>
-          <span style="font-size:13px;font-weight:500">CP06</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <span style="font-size:11px;color:var(--color-text-secondary)">證號 / 統編</span>
-          <span style="font-size:13px;font-weight:500">A123456789</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <span style="font-size:11px;color:var(--color-text-secondary)">供應商名稱</span>
-          <span style="font-size:13px;font-weight:500" id="sapInfoName">王小明</span>
-        </div>
-      </div>
+    <div class="sap-info-grid">
+      <div class="sap-info-field"><span class="sap-info-label">適用公司</span><span class="sap-info-value">12208883</span></div>
+      <div class="sap-info-field"><span class="sap-info-label">帳號類型</span><span class="sap-info-value">CP06</span></div>
+      <div class="sap-info-field"><span class="sap-info-label">證號 / 統編</span><span class="sap-info-value">A123456789</span></div>
+      <div class="sap-info-field"><span class="sap-info-label">供應商名稱</span><span class="sap-info-value" id="sapInfoName">王小明</span></div>
     </div>
     <div class="modal-body" id="sapModalBody"><!-- rendered by JS --></div>
     <div class="modal-foot" style="position:sticky;bottom:0;background:var(--color-background-primary)" id="sapModalFoot"></div>
@@ -1029,36 +1151,72 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
 
 <!-- 貸款入款步驟 Modal (Step 3) -->
 <div class="overlay" id="loanWireStepOverlay" onclick="onLoanWireStepOverlayClick(event)">
-  <div class="modal" style="max-height:90vh;overflow-y:auto">
-    <div class="modal-head" style="position:sticky;top:0;background:var(--color-background-primary);z-index:10">
+  <div class="modal">
+    <div class="modal-head">
       <h2>貸款入款 <span class="method-tag badge-loan">步驟 3</span></h2>
       <button class="modal-close" onclick="closeLoanWireStepModal()" aria-label="關閉"><span>✕</span></button>
     </div>
-    <!-- 提示 -->
-    <div style="margin:0 24px 0;padding:10px 14px;background:#EAF3DE;border:0.5px solid #8CC152;border-radius:var(--border-radius-md);font-size:12px;color:#27500A">
-      <span style="font-size:13px;vertical-align:-1px;margin-right:6px">ℹ</span>
-      查詢匯款記錄並分配貸款款項。確認後此筆貸款付款將完成。
-    </div>
-    <div class="modal-body">
-      <!-- 貸款資訊摘要 -->
-      <div id="lwsRecordSummary" style="padding:10px 0 14px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px;display:flex;gap:20px;flex-wrap:wrap;font-size:12px"></div>
-      <!-- 查詢匯款 -->
-      <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:14px">
-        <div class="fg" style="flex:1;min-width:0">
-          <label>付款人統編 / 證號 <span class="req">*</span></label>
-          <input id="lwsSearchId" type="text" placeholder="統編或身分證字號" style="width:100%"/>
-        </div>
-        <button class="btn-primary" onclick="doLwsSearch()">查詢</button>
+
+    <!-- 訂單資訊列（三排） -->
+    <div class="order-info-bar">
+      <div class="order-info-row">
+        <div class="order-info-item"><span class="oi-label">訂單</span><span class="oi-value">P2026030001</span></div>
+        <div class="order-info-item"><span class="oi-label">車牌</span><span class="oi-value">RAC-1234</span></div>
+        <div class="order-info-item"><span class="oi-label">買受人</span><span class="oi-value">王小明 / A123456789</span></div>
       </div>
+      <div class="order-info-row" id="lwsLoanRow2">
+        <!-- 動態填入：款項類別 | 貸款總額 | 車貸金額 / 超貸金額 -->
+      </div>
+      <div class="order-info-row" id="lwsLoanRow3">
+        <!-- 動態填入：放款機構 | 期數 | 利率 -->
+      </div>
+    </div>
+
+    <!-- 提示 -->
+    <div style="padding:10px 24px 0">
+      <div style="padding:10px 14px;background:#EAF3DE;border:0.5px solid #8CC152;border-radius:var(--border-radius-md);font-size:12px;color:#27500A">
+        <span style="font-size:13px;vertical-align:-1px;margin-right:6px">ℹ</span>
+        查詢匯款記錄並分配貸款款項。確認後此筆貸款付款將完成。
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <!-- 查詢匯款 -->
+      <div class="top-row" style="margin-bottom:14px">
+        <div class="fg" style="width:130px;flex-shrink:0">
+          <label>款項類別</label>
+          <input type="text" id="lwsCategoryDisplay" disabled placeholder="—"/>
+        </div>
+        <div class="fg" style="flex:1;min-width:0">
+          <label style="display:block;margin-bottom:4px">付款人統編 / 證號</label>
+          <div style="display:flex;gap:8px">
+            <input id="lwsSearchId" type="text" disabled placeholder="統編或身分證字號" style="flex:1;min-width:0"/>
+            <button class="btn-primary" onclick="doLwsSearch()">查詢</button>
+          </div>
+        </div>
+      </div>
+
       <div id="lwsResultSection" style="display:none">
-        <table class="tbl">
+        <div style="margin-bottom:8px;font-size:11px;color:var(--color-text-secondary)">
+          僅顯示匯款總額 ≥ 車貸金額的匯款記錄（車貸金額：<span id="lwsCarAmtHint">—</span> 元）
+        </div>
+        <table class="tbl" id="lwsResultTable">
           <colgroup><col class="c-op"/><col class="c-date"/><col class="c-seq"/><col class="c-amt"/><col class="c-bank"/><col class="c-last5"/><col class="c-name"/></colgroup>
           <thead><tr><th>操作</th><th>入帳時間</th><th>匯款序號</th><th>匯款總額</th><th>匯款銀行</th><th>帳號末5碼</th><th>匯款人</th></tr></thead>
           <tbody id="lwsResultBody"></tbody>
         </table>
+        <div id="lwsNoMatch" style="display:none;padding:24px 12px;text-align:center;font-size:12px;color:var(--color-text-secondary)">
+          <div style="font-size:24px;margin-bottom:8px;opacity:0.4">🔍</div>
+          <div style="font-weight:500;margin-bottom:4px">查無符合的匯款記錄</div>
+          <div>目前無匯款總額 ≥ 車貸金額（<span id="lwsNoMatchAmt">—</span> 元）的可用記錄</div>
+        </div>
       </div>
+
       <div id="lwsSelectedSection" style="display:none" class="sel-section">
-        <div class="sel-label">已選擇款項</div>
+        <div style="margin-bottom:10px">
+          <div class="sel-label" style="margin-bottom:2px">款項分配</div>
+          <div style="font-size:11px;color:var(--color-text-secondary)">同一筆匯款金額，可分配給多筆訂單。請輸入本次分配金額</div>
+        </div>
         <table class="sel-tbl">
           <colgroup><col class="sc-date"/><col class="sc-seq"/><col class="sc-total"/><col class="sc-allocated"/><col class="sc-avail"/></colgroup>
           <thead><tr><th>入帳時間</th><th>匯款序號</th><th>匯款總額</th><th>已分配金額</th><th class="avail-th">可分配金額</th></tr></thead>
@@ -1073,7 +1231,13 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
         </table>
         <div class="alloc-row">
           <div class="alloc-field">
-            <label>本次分配金額 <span class="req">*</span></label>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+              <label style="margin:0">本次分配金額 <span class="req">*</span></label>
+              <label class="check-row" style="font-weight:400">
+                <input type="checkbox" id="lwsAllocAll" onchange="onLwsAllocAll(this.checked)" checked/>
+                帶入全部餘額
+              </label>
+            </div>
             <div class="alloc-box" id="lwsAllocBox">
               <input type="number" id="lwsAllocInput" min="0" placeholder="請輸入金額" oninput="onLwsAllocInput(this.value)"/>
               <span class="unit">元</span>
@@ -1088,17 +1252,14 @@ button.pay-info-tag:hover{filter:brightness(0.95)}
             </div>
           </div>
         </div>
-        <div style="margin-top:8px">
-          <label style="font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:6px;cursor:pointer">
-            <input type="checkbox" id="lwsAllocAll" onchange="onLwsAllocAll(this.checked)" checked/>
-            帶入全部餘額
-          </label>
-        </div>
       </div>
     </div>
-    <div style="margin:0 24px 12px;padding:10px 14px;background:#FFFBEB;border:0.5px solid #F5C842;border-radius:var(--border-radius-md);font-size:12px;color:#7A5C00">
-      <span style="font-size:13px;vertical-align:-1px;margin-right:6px">⚠️</span>
-      確認儲存後，此筆貸款付款狀態將更新為<strong>已完成</strong>，無法再修改。
+
+    <div style="padding:0 24px 12px">
+      <div style="padding:10px 14px;background:#FFFBEB;border:0.5px solid #F5C842;border-radius:var(--border-radius-md);font-size:12px;color:#7A5C00">
+        <span style="font-size:13px;vertical-align:-1px;margin-right:6px">⚠️</span>
+        確認儲存後，此筆貸款付款狀態將更新為<strong>已完成</strong>，無法再修改。
+      </div>
     </div>
     <div class="modal-foot" style="position:sticky;bottom:0;background:var(--color-background-primary)">
       <button class="btn-cancel" onclick="closeLoanWireStepModal()">取消</button>
@@ -1208,11 +1369,13 @@ function canDeleteRecord(rec){
   }
   if(rec.method==='匯款' || rec.method==='現金'){
     if(invoiceIssued) return false;
+    if(os==='出售核准' && rec.category==='訂金') return false;
     return os==='暫存' || os==='出售補正' || os==='出售核准';
   }
   if(rec.method==='貸款'){
     if((rec.loanStep||1)>=4) return false;
     if(invoiceIssued) return false;
+    if(os==='出售核准' && rec.category==='訂金') return false;
     return os==='暫存' || os==='出售補正' || os==='出售核准';
   }
   return false;
@@ -1246,9 +1409,56 @@ function updateAddBtn(){
 }
 
 /* 規則說明 popup */
-function openRulePopup(){ document.getElementById('rulePopupOverlay').classList.add('open'); }
-function closeRulePopup(){ document.getElementById('rulePopupOverlay').classList.remove('open'); }
-function onRulePopupOverlayClick(e){ if(e.target===document.getElementById('rulePopupOverlay')) closeRulePopup(); }
+let rulePopupFromPicker = false; // 是否從 picker 開啟
+
+function openRulePopup(tabIdx){
+  rulePopupFromPicker = false;
+  const backBtn = document.getElementById('ruleBackBtn');
+  if(backBtn) backBtn.style.display = 'none';
+  if(typeof tabIdx === 'number') switchRuleTabByIdx(tabIdx);
+  document.getElementById('rulePopupOverlay').classList.add('open');
+}
+
+function openRulePopupFromPicker(e, tabIdx){
+  e.stopPropagation();
+  rulePopupFromPicker = true;
+  const backBtn = document.getElementById('ruleBackBtn');
+  if(backBtn) backBtn.style.display = 'inline-flex';
+  switchRuleTabByIdx(tabIdx);
+  // 先關 picker overlay 視覺，但保留狀態
+  document.getElementById('pickerOverlay').classList.remove('open');
+  document.getElementById('rulePopupOverlay').classList.add('open');
+}
+
+function rulePopupGoBack(){
+  document.getElementById('rulePopupOverlay').classList.remove('open');
+  document.getElementById('pickerOverlay').classList.add('open');
+  rulePopupFromPicker = false;
+  const backBtn = document.getElementById('ruleBackBtn');
+  if(backBtn) backBtn.style.display = 'none';
+}
+
+function closeRulePopup(){
+  document.getElementById('rulePopupOverlay').classList.remove('open');
+  rulePopupFromPicker = false;
+  const backBtn = document.getElementById('ruleBackBtn');
+  if(backBtn) backBtn.style.display = 'none';
+}
+function onRulePopupOverlayClick(e){
+  if(e.target===document.getElementById('rulePopupOverlay')){
+    if(rulePopupFromPicker) rulePopupGoBack();
+    else closeRulePopup();
+  }
+}
+function switchRuleTabByIdx(idx){
+  const tabs = document.querySelectorAll('.rule-popup-tab');
+  const panels = document.querySelectorAll('.rule-panel');
+  tabs.forEach(t=>t.classList.remove('active'));
+  panels.forEach(p=>p.classList.remove('active'));
+  if(tabs[idx]) tabs[idx].classList.add('active');
+  const panel = document.getElementById('rpanel'+idx);
+  if(panel) panel.classList.add('active');
+}
 function switchRuleTab(btn, idx){
   document.querySelectorAll('.rule-popup-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.rule-panel').forEach(p=>p.classList.remove('active'));
@@ -1257,30 +1467,40 @@ function switchRuleTab(btn, idx){
 }
 
 /* Picker 動態渲染 */
+const PICKER_METHODS=[
+  {key:'現金',  icon:'💵',cls:'icon-cash', desc:'代收現金轉匯', ruleIdx:0},
+  {key:'匯款',  icon:'🏦',cls:'icon-wire', desc:'選擇匯入款項', ruleIdx:1},
+  {key:'貸款',  icon:'🧾',cls:'icon-loan', desc:'建立貸款資訊', ruleIdx:2},
+  {key:'信用卡',icon:'💳',cls:'icon-card', desc:'核准訂單不允許刷卡支付', ruleIdx:3},
+];
+let pickerRuleOpenIdx = null; // null = 全收合，0~3 = 展開哪一個
+
 function renderPickerCards(){
-  const methods=[
-    {key:'現金',icon:'💵',cls:'icon-cash',desc:'記錄現金收款'},
-    {key:'匯款',icon:'🏦',cls:'icon-wire',desc:'查詢匯款並分配金額'},
-    {key:'貸款',icon:'🧾',cls:'icon-loan',desc:'設定貸款與放款資訊'},
-    {key:'信用卡',icon:'💳',cls:'icon-card',desc:'輸入刷卡資訊'},
-  ];
-  document.getElementById('pickerBody').innerHTML = methods.map(m=>{
+  document.getElementById('pickerBody').innerHTML = PICKER_METHODS.map((m,i)=>{
     const ok = canAddMethod(m.key);
     const lockMsg = ok ? '' : getLockReason(m.key);
-    return `<div class="method-card${ok?'':' disabled'}" ${ok?`onclick="selectMethod('${m.key}')"`:'tabindex="-1"'}>
-      <div class="method-icon ${m.cls}"><span>${m.icon}</span></div>
-      <div class="method-name">${m.key}</div>
-      <div class="method-desc">${m.desc}</div>
-      <div class="method-lock">${lockMsg?'🔒 '+lockMsg:''}</div>
+    return `<div class="method-card-wrap">
+      <div class="method-card${ok?'':' disabled'}" ${ok?`onclick="selectMethod('${m.key}')"`:'tabindex="-1"'}>
+        <div class="method-icon ${m.cls}"><span>${m.icon}</span></div>
+        <div class="method-name">${m.key}</div>
+        <div class="method-desc">${m.desc}</div>
+        <div class="method-lock">${lockMsg?'🔒 '+lockMsg:''}</div>
+      </div>
+      <button class="method-rule-btn" onclick="openRulePopupFromPicker(event,${m.ruleIdx})" title="查看 ${m.key} 規則">
+        規則說明 <span style="font-size:10px">↗</span>
+      </button>
     </div>`;
   }).join('');
 }
+
+// togglePickerRule removed — rules now open as popup
 
 function getLockReason(method){
   const os = currentOrderStatus;
   const inv = currentInvoiceStatus;
   const invoiceIssued = ['已開立','申請中','已折讓','已作廢'].includes(inv);
   if(invoiceIssued) return `發票${inv}後不可新增`;
+  if(method==='信用卡' && os==='出售核准') return '出售已核准，不允許刷卡支付';
   return `訂單${os}不可新增`;
 }
 
@@ -1300,8 +1520,42 @@ let payRecords=[];
 const badgeClass={匯款:'badge-wire',信用卡:'badge-card',貸款:'badge-loan',現金:'badge-cash'};
 function fmt(n){return Number(n).toLocaleString();}
 
+/* 出售核准後，款項類別只能選尾款 */
+function enforceKindRestriction(){
+  const restricted = currentOrderStatus === '出售核准';
+  ['selCategory','cardCategory','loanCategory','cashCategory','c2wCategory'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    Array.from(el.options).forEach(opt=>{
+      opt.disabled = restricted && opt.value === '訂金';
+    });
+    if(restricted && el.value === '訂金') el.value = '尾款';
+  });
+}
+
+/* 更新所有開啟 modal 內的已登錄 / 待登錄顯示 */
+function refreshModalAmounts(){
+  enforceKindRestriction();
+  const registered = payRecords.reduce((s,r)=>{
+    if(r.method==='貸款') return s+(r.carAmt||r.amount);
+    return s+r.amount;
+  },0);
+  const remain = INVOICE_AMT - registered;
+  const regEls  = document.querySelectorAll('#oiRegistered');
+  const remEls  = document.querySelectorAll('#oiRemain');
+  regEls.forEach(el=>{ el.textContent = 'NT$ '+fmt(registered)+' 元'; });
+  remEls.forEach(el=>{
+    el.textContent = 'NT$ '+fmt(Math.abs(remain))+' 元'+(remain<0?' (超額)':'');
+    el.className = 'oi-value oi-remain' + (remain<0?' over':remain===0?' zero':'');
+  });
+}
+
 /* ── Picker ── */
-function openPicker(){renderPickerCards();document.getElementById('pickerOverlay').classList.add('open');}
+function openPicker(){
+  pickerRuleOpenIdx = null;
+  renderPickerCards();
+  document.getElementById('pickerOverlay').classList.add('open');
+}
 function closePicker(){document.getElementById('pickerOverlay').classList.remove('open');}
 function onPickerOverlayClick(e){if(e.target===document.getElementById('pickerOverlay'))closePicker();}
 
@@ -1309,16 +1563,20 @@ function selectMethod(method){
   closePicker();
   if(method==='匯款'){
     resetWireModal();
-    document.getElementById('wireOverlay').classList.add('open');
+    refreshModalAmounts();
+  document.getElementById('wireOverlay').classList.add('open');
   } else if(method==='信用卡'){
     resetCardModal();
-    document.getElementById('cardOverlay').classList.add('open');
+    refreshModalAmounts();
+  document.getElementById('cardOverlay').classList.add('open');
   } else if(method==='貸款'){
     resetLoanModal();
-    document.getElementById('loanOverlay').classList.add('open');
+    refreshModalAmounts();
+  document.getElementById('loanOverlay').classList.add('open');
   } else if(method==='現金'){
     resetCashModal();
-    document.getElementById('cashOverlay').classList.add('open');
+    refreshModalAmounts();
+  document.getElementById('cashOverlay').classList.add('open');
   }
 }
 
@@ -1708,6 +1966,15 @@ function resetLoanModal(){
   document.getElementById('loanOver').value='';
   document.getElementById('loanAmtErr').textContent='';
   document.getElementById('loanNextStepBanner').style.display='none';
+  // 確保所有欄位回到可編輯狀態（上傳同意書模式可能鎖住它們）
+  ['loanCategory','loanTotal','loanCar','loanPeriod','loanRate','loanInstitution'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.disabled=false;
+  });
+  // 還原標題與按鈕
+  const h2=document.querySelector('#loanOverlay .modal-head h2');
+  if(h2) h2.innerHTML='新增付款資訊 <span class="method-tag badge-loan">貸款</span>';
+  const saveBtn=document.getElementById('loanSaveBtn');
+  if(saveBtn){ saveBtn.textContent='儲存'; saveBtn.onclick=doSaveLoan; }
 }
 function calcLoanAmounts(){
   const total=parseInt(document.getElementById('loanTotal').value)||0;
@@ -1763,7 +2030,7 @@ function updateLoanSaveBtn(){
       const fmtOver=fmt(over);
       txt.innerHTML=`超貸金額 <strong>${fmtOver} 元</strong>。請注意，儲存後，請確認供應商銀行帳戶審核完成，始可開立發票及進行貸款入款。`;
     } else {
-      txt.textContent='儲存後，下一步可直接進行貸款入款';
+      txt.textContent='無超貸情況：儲存後，待訂單審核通過且開立發票後，即可操作貸款入款';
     }
     banner.style.display='block';
   } else {
@@ -1965,6 +2232,7 @@ function openCashToWire(i){
     remarkToggle.style.display='none';
   }
   document.getElementById('c2wCategory').value=rec.category;
+  refreshModalAmounts();
   document.getElementById('cashToWireOverlay').classList.add('open');
 }
 function closeCashToWireModal(){
@@ -1982,6 +2250,11 @@ function resetC2wModal(){
   document.getElementById('c2wNoMatch').style.display='none';
   document.getElementById('c2wAllocErr').textContent='';
   document.getElementById('c2wSaveBtn').disabled=true;
+  document.getElementById('c2wAllocSection').style.display='none';
+  document.getElementById('c2wAllocDisplay').value='';
+  document.getElementById('c2wRemainDisplay').value='';
+  if(document.getElementById('c2wAllocSectionErr')) document.getElementById('c2wAllocSectionErr').textContent='';
+  if(document.getElementById('c2wRemainBox')) document.getElementById('c2wRemainBox').classList.remove('err-box');
   // 重設備註
   const t=document.getElementById('ciRemarkToggle');
   t.style.display='none';
@@ -2015,7 +2288,8 @@ function renderC2wResult(){
   const rec=payRecords[c2wSourceIndex];
   const targetAmt=rec.amount;
   document.getElementById('c2wMatchAmount').textContent=fmt(targetAmt);
-  const matched=wireData.filter(r=>r.total===targetAmt);
+  // 過濾條件：匯款總額 >= 現金金額（顯示所有符合的，後續選擇後再驗證可分配餘額）
+  const matched=wireData.filter(r=>r.total>=targetAmt);
   const noMatch=document.getElementById('c2wNoMatch');
   const tbl=document.querySelector('#c2wResultSection table');
   if(!matched.length){
@@ -2036,31 +2310,56 @@ function renderC2wResult(){
 
 function selectC2wWire(id){
   c2wSelectedId=id;
-  // 檢查可分配餘額是否足夠
-  const rec=payRecords[c2wSourceIndex];
-  const wire=wireData.find(x=>x.id===id);
-  const avail=wire.total-wire.allocated;
-  const errEl=document.getElementById('c2wAllocErr');
-  if(avail<rec.amount){
-    errEl.textContent=`此筆匯款可分配餘額 ${fmt(avail)} 元，不足以轉入現金金額 ${fmt(rec.amount)} 元`;
-  } else {
-    errEl.textContent='';
-  }
   renderC2wResult();
+  document.getElementById('c2wAllocErr').textContent='';
+
+  const r = wireData.find(x=>x.id===id);
+  const cashRec = payRecords[c2wSourceIndex];
+  const cashAmt = cashRec ? cashRec.amount : 0;
+  const avail = r.total - r.allocated;
+  const remain = avail - cashAmt;
+
+  // 填入 sel-section 摘要列
+  document.getElementById('c2wSelDate').textContent = r.date;
+  document.getElementById('c2wSelSeq').textContent = r.seq;
+  document.getElementById('c2wSelTotal').textContent = fmt(r.total);
+  document.getElementById('c2wSelAllocated').textContent = fmt(r.allocated);
+  document.getElementById('c2wSelAvail').textContent = fmt(avail);
+
+  // 本次分配金額（唯讀，固定為現金金額）
+  document.getElementById('c2wAllocDisplay').value = fmt(cashAmt);
+
+  // 剩餘可分配
+  const remEl = document.getElementById('c2wRemainDisplay');
+  const remBox = document.getElementById('c2wRemainBox');
+  const errEl = document.getElementById('c2wAllocSectionErr');
+
+  if(avail < cashAmt){
+    remEl.value = fmt(avail);
+    remBox.classList.add('err-box');
+    errEl.textContent = `可分配餘額 ${fmt(avail)} 元，不足現金登錄金額 ${fmt(cashAmt)} 元，無法轉為匯款`;
+  } else {
+    remEl.value = fmt(remain);
+    remBox.classList.remove('err-box');
+    errEl.textContent = '';
+  }
+
+  document.getElementById('c2wAllocSection').style.display = 'block';
   updateC2wSaveBtn();
 }
 
 function updateC2wSaveBtn(){
   const errEl=document.getElementById('c2wAllocErr');
-  document.getElementById('c2wSaveBtn').disabled=!(!!c2wSelectedId && !errEl.textContent);
+  const sectErr=document.getElementById('c2wAllocSectionErr');
+  const sectErrMsg = sectErr ? sectErr.textContent : '';
+  document.getElementById('c2wSaveBtn').disabled=!(!!c2wSelectedId && !errEl.textContent && !sectErrMsg);
 }
 
 function doSaveCashToWire(){
   const r=wireData.find(x=>x.id===c2wSelectedId);
   const cat=document.getElementById('c2wCategory').value;
-  // 直接修改原現金記錄，變成匯款
   const rec=payRecords[c2wSourceIndex];
-  rec.method='匯款';
+  // 保留 method='現金'，只補充匯款來源資訊，標記已轉匯
   rec.category=cat;
   rec.seq=r.seq;
   rec.wireId=r.id;
@@ -2069,9 +2368,13 @@ function doSaveCashToWire(){
   rec.bank=r.bank;
   rec.last5=r.last5;
   rec.payerName=r.name;
-  rec.fromCash=true;          // 標記來源為現金
+  rec.fromCash=true;
+  rec.convertedToWire=true; // 標記已完成轉匯（隱藏操作選項）
   rec.meta='序號 '+r.seq;
-  delete rec.convertedToWire; // 不再需要此旗標
+  // 以現金金額分配
+  r.allocated+=rec.amount;
+  r.details=r.details||[];
+  r.details.push({order:'P2026030001',amt:rec.amount});
   renderPayList();
   updateTotals();
   closeCashToWireModal();
@@ -2379,6 +2682,21 @@ function approveSapForRecord(i){
   renderPayList();
 }
 
+/* 供應商審核狀態循環切換（測試用） */
+const SAP_STATUS_CYCLE = ['NULL','PENDING','APPROVING','DENIED'];
+function cycleSapStatus(i){
+  const rec = payRecords[i];
+  const cur = rec.sapStatus||'NULL';
+  const idx = SAP_STATUS_CYCLE.indexOf(cur);
+  const next = SAP_STATUS_CYCLE[(idx+1) % SAP_STATUS_CYCLE.length];
+  rec.sapStatus = next;
+  // 同步 loanStep：APPROVING → step 3，其他 → step 2
+  if(next === 'APPROVING') rec.loanStep = 3;
+  else if((rec.loanStep||1) >= 3) rec.loanStep = 2;
+  renderPayList();
+  updateTotals();
+}
+
 
 /* ════════════════════════════
    貸款入款步驟 Modal (Step 3)
@@ -2392,16 +2710,49 @@ function openLoanWireModal(i){
   lwsSelectedId=null;
   lwsDetailOpen=false;
   const rec=payRecords[i];
-  // 摘要
-  document.getElementById('lwsRecordSummary').innerHTML=`
-    <span><span style="color:var(--color-text-secondary)">款項類別</span>&nbsp;<strong>${rec.category}</strong></span>
-    <span><span style="color:var(--color-text-secondary)">金額</span>&nbsp;<strong>NT$ ${fmt(rec.amount)} 元</strong></span>
-    <span><span style="color:var(--color-text-secondary)">放款機構</span>&nbsp;<strong>${rec.institution}</strong></span>
-    <span><span style="color:var(--color-text-secondary)">期數</span>&nbsp;<strong>${rec.period} 期</strong></span>`;
-  // reset
-  document.getElementById('lwsSearchId').value='';
+
+  // Row2：款項類別 | 貸款總額 | 車貸金額 / 超貸金額
+  const hasOverAmt = (rec.overAmt||0) > 0;
+  document.getElementById('lwsLoanRow2').innerHTML=`
+    <div class="order-info-item">
+      <span class="oi-label">款項類別</span>
+      <span class="oi-value">${rec.category}</span>
+    </div>
+    <div class="order-info-item">
+      <span class="oi-label">貸款總額</span>
+      <span class="oi-value">NT$ ${fmt(rec.amount)} 元</span>
+    </div>
+    <div class="order-info-item">
+      <span class="oi-label">車貸金額${hasOverAmt?' / 超貸金額':''}</span>
+      <span class="oi-value oi-amount">NT$ ${fmt(rec.carAmt)} 元${hasOverAmt?' <span style="color:#854F0B;font-size:11px;font-weight:400">/ '+fmt(rec.overAmt)+' 元</span>':''}</span>
+    </div>`;
+
+  // Row3：放款機構 | 期數 | 利率
+  document.getElementById('lwsLoanRow3').innerHTML=`
+    <div class="order-info-item">
+      <span class="oi-label">放款機構</span>
+      <span class="oi-value">${rec.institution||'—'}</span>
+    </div>
+    <div class="order-info-item">
+      <span class="oi-label">期數</span>
+      <span class="oi-value">${rec.period?rec.period+' 期':'—'}</span>
+    </div>
+    <div class="order-info-item">
+      <span class="oi-label">利率</span>
+      <span class="oi-value">${rec.rate?rec.rate+' %':'—'}</span>
+    </div>`;
+
+  // 款項類別（唯讀顯示）
+  document.getElementById('lwsCategoryDisplay').value = rec.category;
+
+  // 付款人統編預帶買受人，disabled
+  document.getElementById('lwsSearchId').value = BUYER.id;
+
+  // reset 查詢結果
   document.getElementById('lwsResultSection').style.display='none';
   document.getElementById('lwsResultBody').innerHTML='';
+  if(document.getElementById('lwsNoMatch')) document.getElementById('lwsNoMatch').style.display='none';
+  if(document.getElementById('lwsResultTable')) document.getElementById('lwsResultTable').style.display='';
   document.getElementById('lwsSelectedSection').style.display='none';
   document.getElementById('lwsAllocInput').value='';
   document.getElementById('lwsRemainInput').value='';
@@ -2421,15 +2772,36 @@ function onLoanWireStepOverlayClick(e){
 function doLwsSearch(){
   const val=document.getElementById('lwsSearchId').value.trim();
   if(!val){return;}
+  // 填入說明文字中的車貸金額
+  const rec = payRecords[lwsRecordIndex];
+  const carAmt = rec ? (rec.carAmt||rec.amount) : 0;
+  const hintEl = document.getElementById('lwsCarAmtHint');
+  const noMatchAmtEl = document.getElementById('lwsNoMatchAmt');
+  if(hintEl) hintEl.textContent = fmt(carAmt);
+  if(noMatchAmtEl) noMatchAmtEl.textContent = fmt(carAmt);
   document.getElementById('lwsResultSection').style.display='block';
   lwsSelectedId=null;
   document.getElementById('lwsSaveBtn').disabled=true;
   renderLwsResult();
 }
 function renderLwsResult(){
-  document.getElementById('lwsResultBody').innerHTML=wireData.map(r=>{
+  const rec = payRecords[lwsRecordIndex];
+  const carAmt = rec ? (rec.carAmt||rec.amount) : 0;
+  const matched = wireData.filter(r => r.total >= carAmt);
+  const noMatch = document.getElementById('lwsNoMatch');
+  const tbl = document.getElementById('lwsResultTable');
+
+  if(!matched.length){
+    tbl.style.display='none';
+    noMatch.style.display='block';
+    document.getElementById('lwsResultBody').innerHTML='';
+    return;
+  }
+  tbl.style.display='';
+  noMatch.style.display='none';
+
+  document.getElementById('lwsResultBody').innerHTML=matched.map(r=>{
     const isSel=lwsSelectedId===r.id;
-    const avail=r.total-r.allocated;
     return `<tr class="${isSel?'selected':''}">
       <td><button class="btn-sel${isSel?' active':''}" onclick="selectLwsWire('${r.id}')">${isSel?'已選':'選擇'}</button></td>
       <td>${r.date}</td><td>${r.seq}</td>
@@ -2537,6 +2909,9 @@ function updateTotals(){
   const err=document.getElementById('ptErr');
   box.style.display=payRecords.length?'block':'none';
   el.textContent=`NT$ ${fmt(total)} 元`;
+  const pct = Math.min((total/INVOICE_AMT)*100, 100);
+  const fill = document.getElementById('ptProgressFill');
+  if(fill){fill.style.width=pct+'%';fill.classList.toggle('over',total>INVOICE_AMT);}
   if(total>INVOICE_AMT){
     el.style.color='#A32D2D';
     err.style.display='block';
@@ -2589,25 +2964,45 @@ function renderPayList(){
     const menuItems=[];
     menuItems.push({action:'view',label:'查看',emoji:'👁'});
 
-    // 編輯（僅貸款，受規則管控）
+    // 貸款同意書（上傳/檢視）
     if(isLoan){
-      menuItems.push({action:'edit',label:'編輯',emoji:'✏️',disabled:!canEdit,
-        lockReason:canEdit?null:getEditLockReason(rec)});
+      const filesDone = (rec.loanStep||1)>=4;
+      menuItems.push({action:'edit',label:'貸款同意書',emoji:'📎',
+        disabled:filesDone, lockReason:filesDone?'貸款入款已完成':null});
     }
 
-    // 轉為匯款（僅現金，且可刪除表示可操作期間）
-    if(rec.method==='現金'&&!rec.convertedToWire)
-      menuItems.push({action:'towire',label:'轉為匯款',emoji:'⇄',disabled:!canDel,
-        lockReason:canDel?null:'目前狀態不可操作'});
+    // 轉為匯款（現金，出售申請中也可操作）
+    if(rec.method==='現金'&&!rec.convertedToWire){
+      const towireOk = ['暫存','出售補正','出售核准','出售申請'].includes(currentOrderStatus)
+        && !['已開立','申請中','已折讓','已作廢'].includes(currentInvoiceStatus);
+      menuItems.push({action:'towire',label:'轉為匯款',emoji:'⇄',disabled:!towireOk,
+        lockReason:towireOk?null:'目前狀態不可操作'});
+    }
 
     // 供應商管理（貸款且有超貸）
-    if(isLoan&&hasOver)
-      menuItems.push({action:'vendor',label:'供應商管理',emoji:'🏦'});
+    if(isLoan&&hasOver){
+      const vendorDone = (rec.loanStep||1)>=4;
+      menuItems.push({action:'vendor',label:'供應商管理',emoji:'🏦',
+        disabled:vendorDone, lockReason:vendorDone?'貸款入款已完成':null});
+      menuItems.push({action:'cyclesap',label:'切換審核狀態 (測試)',emoji:'🔄',
+        disabled:vendorDone});
+    }
 
     // 貸款入款
     if(isLoan){
-      const wireEnabled=hasOver?(s===3&&rec.sapStatus==='APPROVING'):(s>=2);
-      menuItems.push({action:'loanwire',label:'貸款入款',emoji:'💵',disabled:!wireEnabled});
+      const hasFile = !!(rec.loanFiles&&rec.loanFiles.length);
+      const invoiceOk = currentInvoiceStatus==='已開立';
+      const orderOk = currentOrderStatus==='出售核准';
+      const retireStatus = ['退購申請','退購補正','退購核准'].includes(currentOrderStatus);
+      const stepOk = hasOver?(s===3&&rec.sapStatus==='APPROVING'):(s>=2);
+      const wireEnabled = hasFile && invoiceOk && orderOk && stepOk && !retireStatus;
+      let wireLock = null;
+      if(!hasFile) wireLock='請先上傳貸款同意書';
+      else if(!invoiceOk) wireLock='需發票狀態為「已開立」';
+      else if(!orderOk) wireLock='需訂單狀態為「出售核准」';
+      else if(retireStatus) wireLock='退購狀態下不可貸款入款';
+      else if(!stepOk) wireLock='請先完成前置步驟';
+      menuItems.push({action:'loanwire',label:'貸款入款',emoji:'💵',disabled:!wireEnabled,lockReason:wireLock});
     }
 
     // 刪除（受規則管控）
@@ -2634,8 +3029,8 @@ function renderPayList(){
 
     // ── 額外資訊 tags ──
     const tags=[];
-    if(rec.method==='匯款'&&rec.fromCash)
-      tags.push(`<span class="pay-info-tag" style="color:#854F0B;background:#FAEEDA">現金轉匯</span>`);
+    if(rec.convertedToWire)
+      tags.push(`<span class="pay-info-tag" style="color:#854F0B;background:#FAEEDA">已轉匯款</span>`);
     if(rec.method==='匯款'&&rec.isProxy)
       tags.push(`<span class="pay-info-tag" style="color:#854F0B;background:#FEF3E8;border:0.5px solid #F0A45A">代付車款</span>`);
     if(isLoan&&hasOver)
@@ -2646,13 +3041,33 @@ function renderPayList(){
       const style=cfg.style?`style="${cfg.style}"`:'';
       tags.push(`<button class="pay-info-tag loan-step-badge ${cfg.cls}" data-action="vendor" data-index="${i}" ${style}>🏦 供應商：${cfg.label}</button>`);
     }
+    if(isLoan&&(rec.loanStep||1)>=4)
+      tags.push(`<span class="pay-info-tag" style="color:#27500A;background:#EAF3DE;border:0.5px solid #B5D4AA">✓ 已入款</span>`);
+    if(isLoan&&!(rec.loanFiles&&rec.loanFiles.length))
+      tags.push(`<button class="pay-info-tag" style="color:#A32D2D;background:#FCEBEB;border:0.5px solid rgba(163,45,45,0.3);cursor:pointer" data-action="edit" data-index="${i}">⚠ 請上傳貸款同意書</button>`);
+    // 現金：轉為匯款標籤（與操作選單邏輯一致）
+    if(rec.method==='現金'&&!rec.convertedToWire){
+      const towireOk = ['暫存','出售補正','出售核准','出售申請'].includes(currentOrderStatus)
+        && !['已開立','申請中','已折讓','已作廢'].includes(currentInvoiceStatus);
+      if(towireOk)
+        tags.push(`<button class="pay-info-tag" style="color:#27500A;background:#EAF3DE;border:0.5px solid #B5D4AA;cursor:pointer" data-action="towire" data-index="${i}">⇄ 轉為匯款</button>`);
+      else
+        tags.push(`<span class="pay-info-tag" style="color:var(--color-text-secondary);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary)" title="目前狀態不可轉匯">⇄ 轉為匯款</span>`);
+    }
+    // 發票已作廢 → 全部款項標示作廢
+    if(currentInvoiceStatus==='已作廢')
+      tags.push(`<span class="pay-info-tag" style="color:#6b6b67;background:#F1EFE8;border:0.5px solid var(--color-border-tertiary)">已作廢</span>`);
+
+    // 貸款顯示車貸額度為主要金額
+    const displayAmt = isLoan ? (rec.carAmt||rec.amount) : rec.amount;
 
     row.innerHTML=`
-      ${menuHtml}
-      <span class="pay-badge-category">${rec.category}</span>
-      <span class="pay-badge-method ${badgeClass[rec.method]||'badge-cash'}">${rec.method}</span>
-      <span class="pay-amount">${fmt(rec.amount)} 元</span>
-      ${tags.join('')}`;
+      <div class="pay-row-col pay-row-col-ops">${menuHtml}</div>
+      <div class="pay-row-col"><span class="pay-badge-category">${rec.category}</span></div>
+      <div class="pay-row-col"><span class="pay-badge-method ${badgeClass[rec.method]||'badge-cash'}">${rec.method}</span></div>
+      <div class="pay-row-col"><span class="pay-row-amount">${fmt(displayAmt)} 元</span></div>
+      <div class="pay-row-tags">${tags.join('')}</div>
+      <div class="pay-row-col" style="justify-content:flex-end"></div>`;
     container.appendChild(row);
   });
 }
@@ -2692,38 +3107,160 @@ document.getElementById('payList').addEventListener('click',function(e){
   const i=parseInt(btn.dataset.index);
   const action=btn.dataset.action;
   if(action==='delete'){
-    payRecords.splice(i,1);renderPayList();updateTotals();
+    confirmDelete(i);
   } else if(action==='towire'){
     openCashToWire(i);
   } else if(action==='view'){
     openDetailModal(i);
   } else if(action==='edit'){
-    openEditLoanModal(i);
+    openLoanFileOverlay(i);
   } else if(action==='vendor'){
     openSapModalForRecord(i);
+  } else if(action==='cyclesap'){
+    cycleSapStatus(i);
   } else if(action==='loanwire'){
     openLoanWireModal(i);
   }
 });
 function deleteRecord(i){payRecords.splice(i,1);renderPayList();}
 
-function openEditLoanModal(i){
-  const rec=payRecords[i];
-  resetLoanModal();
-  // 填入現有資料
-  document.getElementById('loanCategory').value=rec.category;
-  document.getElementById('loanTotal').value=rec.amount;
-  document.getElementById('loanCar').value=rec.carAmt||0;
-  document.getElementById('loanPeriod').value=rec.period||0;
-  document.getElementById('loanRate').value=rec.rate||'';
-  document.getElementById('loanInstitution').value=rec.institution||'';
-  onLoanInstitutionChange();
-  calcLoanAmounts();
-  // 改為「更新」模式
-  document.getElementById('loanSaveBtn').textContent='更新';
-  document.getElementById('loanSaveBtn').onclick=()=>doUpdateLoan(i);
-  document.getElementById('loanSaveBtn').disabled=false;
-  document.getElementById('loanOverlay').classList.add('open');
+/* 刪除確認 popup */
+function confirmDelete(i){
+  const rec = payRecords[i];
+  const methodLabel = rec.method;
+  const amt = rec.method==='貸款' ? (rec.carAmt||rec.amount) : rec.amount;
+  const overlay = document.getElementById('deleteConfirmOverlay');
+  document.getElementById('deleteConfirmMsg').textContent =
+    `確定要刪除此筆付款記錄嗎？`;
+  document.getElementById('deleteConfirmDetail').textContent =
+    `${rec.category} ／ ${methodLabel} ／ ${fmt(amt)} 元`;
+  overlay.dataset.targetIndex = i;
+  overlay.classList.add('open');
+}
+function closeDeleteConfirm(){
+  document.getElementById('deleteConfirmOverlay').classList.remove('open');
+}
+function doConfirmDelete(){
+  const i = parseInt(document.getElementById('deleteConfirmOverlay').dataset.targetIndex);
+  payRecords.splice(i,1);
+  renderPayList();
+  updateTotals();
+  closeDeleteConfirm();
+}
+
+/* ── 貸款同意書 Popup ── */
+let lfoRecordIndex = null;
+let lfoNewFile = null; // 本次選取的新檔案
+let lfoCleared = false; // 已將現有檔案全部刪除
+
+function openLoanFileOverlay(i){
+  lfoRecordIndex = i;
+  lfoNewFile = null;
+  lfoCleared = false;
+  const rec = payRecords[i];
+  const hasExist = rec.loanFiles && rec.loanFiles.length > 0;
+
+  // 切換區塊
+  document.getElementById('lfoUploadSection').style.display = hasExist ? 'none' : 'block';
+  document.getElementById('lfoExistSection').style.display = hasExist ? 'block' : 'none';
+  document.getElementById('lfoSaveBtn').disabled = true;
+
+  // 重設上傳區
+  document.getElementById('lfoFilePreview').innerHTML = '';
+  document.getElementById('lfoUploadArea').style.display = '';
+  if(document.getElementById('lfoFiles')) document.getElementById('lfoFiles').value = '';
+
+  // 現有檔案列表
+  if(hasExist){
+    document.getElementById('lfoExistList').innerHTML = rec.loanFiles.map((f,fi)=>`
+      <div class="proxy-file-item">
+        <span class="proxy-file-icon">📄</span>
+        <span class="proxy-file-name">${f.name}</span>
+        <span class="proxy-file-size">${f.size}</span>
+        <div class="proxy-file-actions">
+          <a href="${f.url}" download="${f.name}" class="btn-icon" title="下載"><span>⬇</span></a>
+          <button class="btn-icon danger" title="刪除" onclick="lfoDeleteExist(${fi})"><span>🗑</span></button>
+        </div>
+      </div>`).join('');
+  }
+
+  document.getElementById('loanFileOverlay').classList.add('open');
+}
+
+function closeLoanFileOverlay(){
+  document.getElementById('loanFileOverlay').classList.remove('open');
+  lfoRecordIndex = null;
+  lfoNewFile = null;
+  lfoCleared = false;
+}
+
+function onLfoFilesChange(e){
+  const files = e.target.files;
+  if(!files.length) return;
+  lfoNewFile = files[0];
+  e.target.value = '';
+  renderLfoPreview();
+}
+function onLfoDrop(e){
+  e.preventDefault();
+  if(!e.dataTransfer.files.length) return;
+  lfoNewFile = e.dataTransfer.files[0];
+  renderLfoPreview();
+}
+function renderLfoPreview(){
+  if(!lfoNewFile){ document.getElementById('lfoFilePreview').innerHTML=''; document.getElementById('lfoSaveBtn').disabled=true; return; }
+  const f = lfoNewFile;
+  const size = f.size<1024*1024?`${(f.size/1024).toFixed(0)} KB`:`${(f.size/1024/1024).toFixed(1)} MB`;
+  document.getElementById('lfoUploadArea').style.display = 'none';
+  document.getElementById('lfoFilePreview').innerHTML = `
+    <div class="proxy-file-item">
+      <span class="proxy-file-icon">📄</span>
+      <span class="proxy-file-name">${f.name}</span>
+      <span class="proxy-file-size">${size}</span>
+      <div class="proxy-file-actions">
+        <button class="btn-icon danger" title="移除" onclick="lfoRemoveNew()"><span>🗑</span></button>
+      </div>
+    </div>`;
+  document.getElementById('lfoSaveBtn').disabled = false;
+}
+function lfoRemoveNew(){
+  lfoNewFile = null;
+  document.getElementById('lfoUploadArea').style.display = '';
+  document.getElementById('lfoFilePreview').innerHTML = '';
+  document.getElementById('lfoSaveBtn').disabled = true;
+}
+function lfoDeleteExist(fi){
+  if(lfoRecordIndex===null) return;
+  const rec = payRecords[lfoRecordIndex];
+  rec.loanFiles.splice(fi, 1);
+  if(!rec.loanFiles.length){
+    // 全部刪完：切換為上傳模式，啟用儲存（代表「確認清空」）
+    lfoCleared = true;
+    document.getElementById('lfoUploadSection').style.display = 'block';
+    document.getElementById('lfoExistSection').style.display = 'none';
+    document.getElementById('lfoSaveBtn').disabled = false;
+  } else {
+    // 還有其他檔案，重新渲染列表，即時生效（不需再按儲存）
+    renderPayList();
+    updateTotals();
+    openLoanFileOverlay(lfoRecordIndex);
+  }
+}
+function doSaveLfo(){
+  if(lfoRecordIndex===null) return;
+  const rec = payRecords[lfoRecordIndex];
+  if(lfoNewFile){
+    // 上傳新檔案
+    const f = lfoNewFile;
+    const size = f.size<1024*1024?`${(f.size/1024).toFixed(0)} KB`:`${(f.size/1024/1024).toFixed(1)} MB`;
+    rec.loanFiles = (rec.loanFiles||[]).concat([{name:f.name, size, url:URL.createObjectURL(f)}]);
+  } else if(lfoCleared){
+    // 確認清空
+    rec.loanFiles = [];
+  } else return;
+  renderPayList();
+  updateTotals();
+  closeLoanFileOverlay();
 }
 function doUpdateLoan(i){
   const rec=payRecords[i];
@@ -2747,7 +3284,10 @@ function doUpdateLoan(i){
 function openDetailModal(i){
   const rec=payRecords[i];
   const badgeHtml=`<span class="pay-badge ${badgeClass[rec.method]||'badge-cash'}" style="vertical-align:middle">${rec.method}</span>`;
-  document.getElementById('detailModalTitle').innerHTML=`付款詳情 ${badgeHtml}`;
+  const voidedBadge = currentInvoiceStatus==='已作廢'
+    ? ' <span class="pay-badge badge-cash" style="font-size:11px;vertical-align:middle;opacity:0.8">已作廢</span>'
+    : '';
+  document.getElementById('detailModalTitle').innerHTML=`付款詳情 ${badgeHtml}${voidedBadge}`;
 
   // 共用橫排區塊（固定，不捲動）
   const displayAmount=rec.method==='貸款'?fmt(rec.carAmt)+' 元':fmt(rec.amount)+' 元';
@@ -2783,8 +3323,9 @@ function openDetailModal(i){
       {label:'統編',value:rec.taxId||'—'},
       {label:'期數',value:rec.period?rec.period+' 期':'—'},
       {label:'利率',value:rec.rate?rec.rate+' %':'—'},
+      {label:'貸款總額',value:rec.amount?fmt(rec.amount)+' 元':'—'},
       {label:'車貸額度',value:rec.carAmt?fmt(rec.carAmt)+' 元':'—'},
-      {label:'超貸額度',value:rec.overAmt?fmt(rec.overAmt)+' 元':'—'},
+      {label:'超貸額度',value:(rec.overAmt||0)>0?fmt(rec.overAmt)+' 元':'無'},
     ];
     if(rec.note) loanInfoFields.push({label:'說明',value:rec.note});
     if(rec.loanFiles&&rec.loanFiles.length) loanInfoFields.push({label:'貸款同意書',value:rec.loanFiles.map(fileLink).join('')});
@@ -2836,11 +3377,10 @@ function openDetailModal(i){
       <div class="detail-tab-panel" id="dtab2">${renderFields(wireFields)}</div>`;
   } else {
     // 各付款方式專屬欄位（可捲動）
-    document.getElementById('detailModalFields').innerHTML=`<div style="padding:4px 24px 8px">${fields.map(f=>`
-      <div class="detail-field">
-        <span class="df-label">${f.label}</span>
-        <span class="df-value">${f.value}</span>
-      </div>`).join('')}</div>`;
+    document.getElementById('detailModalFields').innerHTML=`<div style="padding:4px 24px 8px">${fields.map(f=>{
+      if(f.separator) return `<div style="font-size:11px;color:var(--color-text-secondary);letter-spacing:.05em;padding:10px 0 4px;border-top:0.5px solid var(--color-border-tertiary);margin-top:4px;font-weight:600">${f.label}</div>`;
+      return `<div class="detail-field"><span class="df-label">${f.label}</span><span class="df-value">${f.value}</span></div>`;
+    }).join('')}</div>`;
   }
 
   document.getElementById('detailModalOverlay').classList.add('open');
@@ -2897,9 +3437,38 @@ function buildDetailFields(rec){
     fields.push({label:'收款人',value:rec.receiver||BUYER.name});
     fields.push({label:'收款日期',value:rec.time?rec.time.replace(/-/g,'/'):'—'});
     if(rec.remark) fields.push({label:'備註',value:rec.remark});
+    // 已轉匯：加上匯款資料
+    if(rec.convertedToWire){
+      fields.push({label:'來源',value:'現金轉匯'});
+      fields.push({label:'匯款日期',value:rec.wireDate||'—'});
+      fields.push({label:'匯款序號',value:rec.seq||'—'});
+      fields.push({label:'匯入銀行',value:rec.bank||'—'});
+      fields.push({label:'帳號末五碼',value:rec.last5||'—'});
+      fields.push({label:'匯款人',value:rec.payerName||'—'});
+      fields.push({label:'匯款總額',value:rec.wireTotal?fmt(rec.wireTotal)+' 元':'—'});
+      fields.push({label:'本筆分配金額',value:fmt(rec.amount)+' 元'});
+    }
   }
   return fields;
 }
+/* ════════════════════════════
+   共用 renderFileItem utility
+════════════════════════════ */
+function renderFileItem(file, onRemove, onDownload){
+  const isPdf = file.type==='application/pdf' || /\.pdf$/i.test(file.name);
+  const size = file.size<1024*1024 ? `${(file.size/1024).toFixed(0)} KB` : `${(file.size/1024/1024).toFixed(1)} MB`;
+  const icon = isPdf ? '📄' : '🖼';
+  return `<div class="proxy-file-item">
+    <span class="proxy-file-icon">${icon}</span>
+    <span class="proxy-file-name">${file.name}</span>
+    <span class="proxy-file-size">${size}</span>
+    <div class="proxy-file-actions">
+      <button class="btn-icon" title="下載" onclick="${onDownload}()"><span>⬇</span></button>
+      <button class="btn-icon danger" title="刪除" onclick="${onRemove}()"><span>🗑</span></button>
+    </div>
+  </div>`;
+}
+
 /* 初始化 */
 document.addEventListener('DOMContentLoaded',()=>{
   const ct=document.getElementById('cashTime');
@@ -2919,7 +3488,6 @@ function loadTestData(){
   payRecords=[
     {category:'訂金',method:'現金',amount:30000,time:'2026-03-01',date:'2026-03-01',remark:'現場收取',meta:'2026/03/01',receiver:'王小明'},
     {category:'訂金',method:'匯款',amount:50000,seq:'W240301001',wireId:'w1',wireDate:'2024/05/28',wireTotal:100000,bank:'台新銀行(812)',last5:'44986',payerName:'數來寶有限公司',isProxy:false,proxyFiles:[]},
-    {category:'尾款',method:'匯款',amount:20000,seq:'W240302001',wireId:'w2',wireDate:'2024/05/28',wireTotal:53000,bank:'中國信託(822)',last5:'44986',payerName:'數來寶有限公司',fromCash:true,isProxy:false,proxyFiles:[]},
     {category:'尾款',method:'匯款',amount:40000,seq:'W240303001',wireId:'w3',wireDate:'2024/05/28',wireTotal:98000,bank:'中國信託(822)',last5:'44986',payerName:'王大明',isProxy:true,proxyFiles:proxyFilesMock},
     {category:'尾款',method:'信用卡',amount:35000,time:'2026-03-05',last4:'1234',auth:'A12345',batch:'B001',seq:'末1234',meta:'授權碼 A12345',cardFiles:cardFilesMock},
     {category:'尾款',method:'貸款',amount:80000,carAmt:80000,overAmt:0,institution:'中國信託',taxId:'03077208',period:'36',rate:'2.5',loanStep:2,sapStatus:'NULL',loanFiles:loanFilesMock},
@@ -2935,5 +3503,47 @@ function clearTestData(){
   updateTotals();
 }
 </script>
+
+<!-- 刪除確認 Popup -->
+<div class="overlay" id="deleteConfirmOverlay" onclick="if(event.target===this)closeDeleteConfirm()" style="z-index:300">
+  <div style="background:var(--color-background-primary);border-radius:var(--border-radius-lg);width:360px;max-width:94vw;border:0.5px solid var(--color-border-tertiary);box-shadow:0 8px 32px rgba(0,0,0,0.2);padding:24px">
+    <div style="font-size:18px;margin-bottom:12px">🗑</div>
+    <div style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:6px" id="deleteConfirmMsg">確定刪除？</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:20px" id="deleteConfirmDetail"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn-cancel" onclick="closeDeleteConfirm()">取消</button>
+      <button style="padding:7px 20px;background:#A32D2D;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;font-weight:500" onclick="doConfirmDelete()">確認刪除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 貸款同意書 Popup -->
+<div class="overlay" id="loanFileOverlay" onclick="if(event.target===this)closeLoanFileOverlay()" style="z-index:200">
+  <div style="background:var(--color-background-primary);border-radius:var(--border-radius-lg);width:480px;max-width:96vw;border:0.5px solid var(--color-border-tertiary);box-shadow:0 8px 32px rgba(0,0,0,0.2)">
+    <div class="modal-head">
+      <h2>貸款同意書</h2>
+      <button class="modal-close" onclick="closeLoanFileOverlay()"><span>✕</span></button>
+    </div>
+    <div style="padding:20px 24px">
+      <!-- 無檔案：上傳區 -->
+      <div id="lfoUploadSection">
+        <div class="upload-area" id="lfoUploadArea" ondragover="event.preventDefault()" ondrop="onLfoDrop(event)">
+          <input type="file" id="lfoFiles" accept="image/*,.pdf" onchange="onLfoFilesChange(event)"/>
+          <div class="upload-icon"><span>📁</span></div>
+          <div class="upload-hint">點擊選擇或拖曳上傳（圖片或 PDF，限 1 個）</div>
+        </div>
+        <div class="proxy-file-list" id="lfoFilePreview" style="margin-top:10px"></div>
+      </div>
+      <!-- 有檔案：顯示現有 -->
+      <div id="lfoExistSection" style="display:none">
+        <div id="lfoExistList" class="proxy-file-list"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeLoanFileOverlay()">取消</button>
+      <button class="btn-primary" id="lfoSaveBtn" disabled onclick="doSaveLfo()">儲存</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
